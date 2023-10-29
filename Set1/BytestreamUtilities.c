@@ -235,7 +235,12 @@ void print_base64(unsigned char *input){
 
 
 unsigned char* xor_byte_streams(unsigned char *bytes1, unsigned char *bytes2){
-
-
-  return bytes1;
+  // returns a list of bytes with length equal to the minimum of the lengths of the inputs and with the xor of the two streams as the value
+  int length = bytes2[0] ^ ((bytes1[0] ^ bytes2[0]) & -(bytes1[0] < bytes2[0]));
+  unsigned char *xorbytes = malloc(sizeof(unsigned char)*(length +1));
+  xorbytes[0] = length;
+  for(int i = 0; i < length; i++){
+    xorbytes[i+1] = bytes1[i+1] ^ bytes2[i+1];
+  }
+  return xorbytes;
 }
