@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Challenge1.c contains functions which can interconvert between null-terminated base64 strings and hexadecimal strings
+// and bytes represented as a list of chars, where the 0th entry is the number of bytes present
+// TODO: Fix memory issues where not all memory is cleaned up on a exit due to invalid input
+// TODO: Do this by replacing exits with an returned invalid value and then handle cleanup?
+
 unsigned char* convert_hex_str_to_bytes(char *input);
 char* convert_bytes_to_hex_str(unsigned char *input);
 void print_hex(unsigned char *input);
@@ -22,10 +27,12 @@ int main(int argc, char *argv[]){
   printf("\n");
   printf("The input was %s.\n",argv[1]);
 
-  unsigned char *bytes = convert_base64_str_to_bytes(argv[1]);
+  unsigned char *bytes = convert_hex_str_to_bytes(argv[1]);
 
   
   print_hex(bytes);
+  printf("\n");
+  print_base64(bytes);
   free(bytes);
 
   printf("\n\n");
@@ -109,7 +116,7 @@ char* convert_bytes_to_hex_str(unsigned char *input){
 void print_hex(unsigned char *input){
   // Prints a array of chars storing a list of bytes as a hex string
   char *hex_str = convert_bytes_to_hex_str(input);
-  printf("0x%s",hex_str);
+  printf("0x%s\n",hex_str);
   free(hex_str);
   return;
 }
@@ -173,7 +180,7 @@ unsigned char* convert_base64_str_to_bytes(char *input){
       exit(1);
     } else if(temp == 64){
       output[3*i+1] = ((char3value & 0xff0000) >> 16);
-      output[0] -= 2;
+      output[0] = 3*i+1;
       return output;
     }
     char3value += (temp << 6);
@@ -186,7 +193,7 @@ unsigned char* convert_base64_str_to_bytes(char *input){
     } else if(temp == 64){
       output[3*i+1] = ((char3value & 0xff0000) >> 16);
       output[3*i+2] = ((char3value & 0x00ff00) >> 8);
-      output[0] -= 1;
+      output[0] = 3i+2;
       return output;
     }
     char3value += temp;
@@ -198,11 +205,57 @@ unsigned char* convert_base64_str_to_bytes(char *input){
   return output;
 }
 
+char convert_int_to_base64_char(unsigned char input){
+  // Takes in a 6 bit input and converts to a base64 character output
+  char output = -1;
+
+  if((input < 26)){
+    output = input + 65;
+  } else if((input > 25) && (input < 52)){
+    output = input - 26 + 97;
+  } else if((input > 51) && (input < 62)){
+    output = input - 52 + 48;
+  } else if(input == 62){
+    output = 43;
+  } else if(input == 62){
+    output = 47;
+  }
+  return output;
+}
+
 char* convert_bytes_to_base64_str(unsigned char *input){
   //Converts a list of bytes into a string with its base64 representation
   int length = input[0];
-  char *output = malloc(sizeof(char)*length);
+  char *output = malloc(sizeof(char)*(4*((length/3)+((length%3)!=0))+1));
 
+  for(int i = 0; i < (length/3); i++){
+    int char3value = (input[3*i+1] << 16);
+    char3value += (input[3*i+2] << 8);
+    char3value += input[3*i+3];
+
+    output[4*i] = convert_int_to_base64_char((char3value >> 18) & 0x3f);
+    output[4*i+1] = convert_int_to_base64_char((char3value >> 12) & 0x3f);
+    output[4*i+2] = convert_int_to_base64_char((char3value >> 6) & 0x3f);
+    output[4*i+3] = convert_int_to_base64_char((char3value) & 0x3f);
+
+  }
+
+  if((length - 3*(length/3)) == 2){
+    int char2value = (input[length - 1] << 8);
+    char2value = input[length];
+    output[4*(length/3)] = convert_int_to_base64_char((char2value >> 10) & 0x3f);
+    output[4*(length/3)+1] = convert_int_to_base64_char((char2value >> 4) & 0x3f);
+    output[4*(length/3)+2] = convert_int_to_base64_char((char2value << 2) & 0x3c);
+    output[4*(length/3)+3] = 61;
+  } else if((length - 3*(length/3))==1){
+    int char1value = input[length];
+    output[4*(length/3)] = convert_int_to_base64_char((char1value >> 2) & 0x3f);
+    output[4*(length/3)+1] = convert_int_to_base64_char((char1value << 4) & 0x30);
+    output[4*(length/3)+2] = 61;
+    output[4*(length/3)+3] = 61;
+  }
+
+  output[4*((length/3)+1)] = 0x00;
   
   return output;
 }
@@ -210,7 +263,7 @@ char* convert_bytes_to_base64_str(unsigned char *input){
 void print_base64(unsigned char *input){
   //Prints a list of bytes as its base64 representation
   char *base64_str = convert_bytes_to_base64_str(input);
-  printf("%s",base64_str);
+  printf("%s\n",base64_str);
   free(base64_str);
   return;
 }
