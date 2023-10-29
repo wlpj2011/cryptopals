@@ -193,7 +193,7 @@ unsigned char* convert_base64_str_to_bytes(char *input){
     } else if(temp == 64){
       output[3*i+1] = ((char3value & 0xff0000) >> 16);
       output[3*i+2] = ((char3value & 0x00ff00) >> 8);
-      output[0] = 3i+2;
+      output[0] = 3*i+2;
       return output;
     }
     char3value += temp;
@@ -242,7 +242,7 @@ char* convert_bytes_to_base64_str(unsigned char *input){
 
   if((length - 3*(length/3)) == 2){
     int char2value = (input[length - 1] << 8);
-    char2value = input[length];
+    char2value += input[length];
     output[4*(length/3)] = convert_int_to_base64_char((char2value >> 10) & 0x3f);
     output[4*(length/3)+1] = convert_int_to_base64_char((char2value >> 4) & 0x3f);
     output[4*(length/3)+2] = convert_int_to_base64_char((char2value << 2) & 0x3c);
