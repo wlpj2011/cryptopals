@@ -11,4 +11,6 @@ unsigned char convert_hex_char_to_int(char input);
 char *convert_byte_to_hex_chars(unsigned char input);
 unsigned char convert_base64_char_to_int(char input);
 
+void print_ascii(unsigned char *input);
+
 unsigned char* xor_byte_streams(unsigned char *bytes1, unsigned char *bytes2);

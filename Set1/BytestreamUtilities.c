@@ -244,3 +244,12 @@ unsigned char* xor_byte_streams(unsigned char *bytes1, unsigned char *bytes2){
   }
   return xorbytes;
 }
+
+void print_ascii(unsigned char *input){
+  int length = input[0];
+  for(int i =0; i < length; i++){
+    printf("%c",input[i+1]);
+  }
+  printf("\n");
+  return;
+}

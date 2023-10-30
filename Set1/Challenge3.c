@@ -15,7 +15,23 @@ int main(int argc, char *argv[]){
   }
 
   unsigned char *bytes1 = convert_hex_str_to_bytes(argv[1]);
+  print_hex(bytes1);
   
+  int length = bytes1[0];
+  for(int i = 0; i < 256; i++){
+    unsigned char *testkey = malloc(sizeof(unsigned char) * (length + 1));
+    testkey[0] = length;
+    for(int j = 0; j < length; j++){
+      testkey[j+1] = i;
+    }
+    unsigned char *testdecrypt = xor_byte_streams(bytes1,testkey);
+    if(byte_stream_is_ascii(testdecrypt)){
+      printf("The key %02x gives the decrypt ",i);
+      print_ascii(testdecrypt);
+    }
+    free(testkey);
+    free(testdecrypt);
+  }
   
   free(bytes1);
 
