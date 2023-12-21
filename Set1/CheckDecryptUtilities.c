@@ -17,19 +17,23 @@ bool byte_stream_is_ascii(unsigned char *bytes){
 }
 
 float byte_stream_compare_character_distribution(unsigned char *bytes){
-  float byte_frequencies[] = {0};
+  float byte_frequencies[27] = {0};
   int length = bytes[0];
+  float base_freq = 1 / ((float) length);
   for(int i = 1; i < length; i++){
     if(bytes[i] == 0x20){
-      byte_frequencies[0] += 1/length;
+      byte_frequencies[0] += base_freq;
     } else if((bytes[i] > 0x41) && (bytes[i] < 0x5A)){
-      byte_frequencies[bytes[i] - 0x40] += 1/length;
+      byte_frequencies[bytes[i] - 0x40] += base_freq;
     } else if((bytes[i] > 0x61) && (bytes[i] < 0x7A)){
-      byte_frequencies[bytes[i] - 0x60] += 1/length;
+      byte_frequencies[bytes[i] - 0x60] += base_freq;
     }
   }
+
+  float result = 0.0;
+  
   for(int i = 0; i < 27; i++){
-    printf("%f\n",byte_frequencies[i]);
+    result += (byte_frequencies[i] - ascii_frequencies[i])*(byte_frequencies[i] - ascii_frequencies[i]);
   }
-  return 0.0;
+  return result;
 }

@@ -15,9 +15,11 @@ int main(int argc, char *argv[]){
   }
 
   unsigned char *bytes1 = convert_hex_str_to_bytes(argv[1]);
-  print_hex(bytes1);
+  //print_hex(bytes1);
   
   int length = bytes1[0];
+  float minimum_decrypt_score = 27.0;
+  int minimum_decrypt_key = 0x00;
   for(int i = 0; i < 256; i++){
     unsigned char *testkey = malloc(sizeof(unsigned char) * (length + 1));
     testkey[0] = length;
@@ -26,11 +28,16 @@ int main(int argc, char *argv[]){
     }
     unsigned char *testdecrypt = xor_byte_streams(bytes1,testkey);
     if(byte_stream_is_ascii(testdecrypt)){
-      printf("The key %02x gives the decrypt ",i);
-      print_ascii(testdecrypt);
-    }
-    if(i == 0x5f){
+      //printf("The key %02x gives the decrypt ",i);
+      //print_ascii(testdecrypt);
       float value = byte_stream_compare_character_distribution(testdecrypt);
+      if(value < minimum_decrypt_score){
+	minimum_decrypt_score = value;
+	minimum_decrypt_key = i;
+	printf("The key 0x%02x gives the decrypt ", i);
+	print_ascii(testdecrypt);
+      }
+      
     }
     free(testkey);
     free(testdecrypt);
