@@ -29,6 +29,9 @@ int main(int argc, char *argv[]){
       printf("The key %02x gives the decrypt ",i);
       print_ascii(testdecrypt);
     }
+    if(i == 0x5f){
+      float value = byte_stream_compare_character_distribution(testdecrypt);
+    }
     free(testkey);
     free(testdecrypt);
   }
