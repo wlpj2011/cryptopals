@@ -13,9 +13,22 @@ int main(int argc, char *argv[]){
     printf("Usage: %s file_of_byte_streams.txt\n",argv[0]);
     exit(1);
   }
+  FILE *fptr;
+  
+  fptr = fopen("/Users/William/cryptopals/Set1/C4data.txt","r");
 
-  unsigned char *bytes1 = convert_hex_str_to_bytes(argv[1]);
-  //print_hex(bytes1);
+  if(fptr == NULL) {
+    printf("Not able to open C4data.txt.\n");
+    exit(1);
+  }
+
+  rewind(fptr);
+  //Need a loop over the number of lines in the file
+  //Want to read a single line from fptr and store it as a string hex_bytes
+
+  
+  unsigned char *enc_bytes = convert_hex_str_to_bytes(hex_bytes);
+
 
   /*
   int length = bytes1[0];
@@ -43,9 +56,11 @@ int main(int argc, char *argv[]){
     free(testkey);
     free(testdecrypt);
   }
-  
-  free(bytes1);
   */
+  free(bytes1);
+
+  fclose(fptr);
+  
   exit(0);
 }
 
