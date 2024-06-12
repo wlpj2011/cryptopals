@@ -15,10 +15,10 @@ int main(int argc, char *argv[]){
   }
   FILE *fptr;
   
-  fptr = fopen("../../data/set1/C4data.txt","r");
+  fptr = fopen(argv[1],"r");
 
   if(fptr == NULL) {
-    printf("Not able to open C4data.txt.\n");
+    printf("Not able to open %s.\n",argv[1]);
     exit(1);
   }
 
@@ -27,19 +27,29 @@ int main(int argc, char *argv[]){
   //Want to read a single line from fptr and store it as a string hex_bytes
 
   int LINELENGTH = 62;
+  // This only supports things of known and fixed length
   char hex_bytes[LINELENGTH];
 
-  while(fgets(hex_bytes,sizeof hex_bytes, fptr) != NULL){
-    //printf("%s",hex_bytes);
+  while(fgets(hex_bytes,sizeof(hex_bytes), fptr) != NULL){
+    printf("%s",hex_bytes);
     if(hex_bytes[LINELENGTH] == '\n'){
+      // If the last character is a newline, make it null
       hex_bytes[LINELENGTH] = 0x00;
     }
+    
+    //Convert to a bytestring
     unsigned char *enc_bytes = convert_hex_str_to_bytes(hex_bytes);
-
+    
+    
     int length = enc_bytes[0];
+    //Set initial decrypt parameters
     float minimum_decrypt_score = 27.0;
     int best_decrypt_key = 0x00;
+
+    //Trial decrypt
     for(int i=0; i < 256; i++){
+      // Create an array to be used as a bytestream and fill it with repeitions of the key
+      // Should make a function for this that takes a sequence of key bytes to repeat and a total length
       unsigned char *testkey = malloc(sizeof(unsigned char) * (length + 1));
       testkey[0] = length;
       for(int j = 0; j < length; j++){

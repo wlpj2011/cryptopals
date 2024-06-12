@@ -38,7 +38,7 @@ Challenge3: $(ODIR)set1/Challenge3.o $(OBJ)
 	$(CC) -o $(BINDIR)set1/$@.exe $^ $(CFLAGS) $(LIBS)
 
 Challenge4: $(ODIR)set1/Challenge4.o $(OBJ)
-#Compiles Challenge 
+#Compiles Challenge 4
 	$(CC) -o $(BINDIR)set1/$@.exe $^ $(CFLAGS) $(LIBS)
 
 vpath
