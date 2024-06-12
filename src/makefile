@@ -11,7 +11,7 @@ LIBS=-lm
 _DEPS = set1/BytestreamUtilities.h set1/CheckDecryptUtilities.h
 DEPS = $(patsubst %,$(IDIR)%,$(_DEPS))
 
-_OBJ = include/set1/BytestreamUtilities.o include/set1/CheckDecryptUtitilites.o 
+_OBJ = include/set1/BytestreamUtilities.o include/set1/CheckDecryptUtilities.o 
 OBJ = $(patsubst %,$(ODIR)%,$(_OBJ))
 
 
@@ -19,7 +19,7 @@ OBJ = $(patsubst %,$(ODIR)%,$(_OBJ))
 $(ODIR)set1/%.o: set1/%.c 
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(ODIR)include/%.o: $(DEPS)
+$(ODIR)include/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 vpath %.c set1
