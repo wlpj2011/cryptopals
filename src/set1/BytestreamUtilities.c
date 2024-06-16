@@ -253,3 +253,18 @@ void print_ascii(unsigned char *input){
   printf("\n");
   return;
 }
+
+unsigned char* create_periodic_byte_stream(unsigned char *input, unsigned char length){
+  // Remember that a bytestream has its length as the 0th element of the array
+  unsigned char *output = malloc(sizeof(char) * (length + 1));
+  if(length > 255){
+    printf("Tried to make byte stream too long");
+    free(output);
+    exit(1);
+  }
+  output[0] = length;
+  for(unsigned char i = 0; i < length; i++){
+    output[i+1] = input[i % input[0] + 1];
+  }
+  return output;
+}

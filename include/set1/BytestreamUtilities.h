@@ -14,3 +14,5 @@ unsigned char convert_base64_char_to_int(char input);
 void print_ascii(unsigned char *input);
 
 unsigned char* xor_byte_streams(unsigned char *bytes1, unsigned char *bytes2);
+
+unsigned char* create_periodic_byte_stream(unsigned char *input, int length);

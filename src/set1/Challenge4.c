@@ -50,7 +50,8 @@ int main(int argc, char *argv[]){
     for(int i=0; i < 256; i++){
       // Create an array to be used as a bytestream and fill it with repeitions of the key
       // Should make a function for this that takes a sequence of key bytes to repeat and a total length
-      unsigned char *testkey = malloc(sizeof(unsigned char) * (length + 1));
+      unsigned char key[2] = {1,i};
+      unsigned char *testkey = create_periodic_byte_stream(key,length);
       testkey[0] = length;
       for(int j = 0; j < length; j++){
 	testkey[j+1] = i;
