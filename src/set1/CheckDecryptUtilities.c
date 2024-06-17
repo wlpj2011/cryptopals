@@ -17,15 +17,17 @@ bool byte_stream_is_ascii(unsigned char *bytes){
 }
 
 float byte_stream_compare_character_distribution(unsigned char *bytes){
+  // Compares an expected "in-order" distribution to the expected character distribution of english corpus
+  // Only works if everything is in the range 0x41 - 0x5A, 0x61 - 0x7A and 0x20 and expects those to correspond to the appropriate ASCII characters
   float byte_frequencies[27] = {0};
   int length = bytes[0];
   float base_freq = 1 / ((float) length);
   for(int i = 1; i < length; i++){
     if(bytes[i] == 0x20){
       byte_frequencies[0] += base_freq;
-    } else if((bytes[i] > 0x41) && (bytes[i] < 0x5A)){
+    } else if((bytes[i] >= 0x41) && (bytes[i] <= 0x5A)){
       byte_frequencies[bytes[i] - 0x40] += base_freq;
-    } else if((bytes[i] > 0x61) && (bytes[i] < 0x7A)){
+    } else if((bytes[i] >= 0x61) && (bytes[i] <= 0x7A)){
       byte_frequencies[bytes[i] - 0x60] += base_freq;
     }
   }
