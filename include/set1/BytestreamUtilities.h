@@ -1,4 +1,4 @@
-
+#pragma once
 unsigned char* convert_hex_str_to_bytes(char *input);
 char* convert_bytes_to_hex_str(unsigned char *input);
 void print_hex(unsigned char *input);

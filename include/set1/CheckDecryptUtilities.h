@@ -1,3 +1,4 @@
+#pragma once
 #include <stdbool.h>
 
 extern const float ascii_frequencies[];
